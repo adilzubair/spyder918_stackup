@@ -4,6 +4,7 @@ Long Description about project. This project do that. This project is awesome...
 ## Team members
 1. Name [Embed personal github URL]
 2. Jobin Tom [https://github.com/jobint001]
+3. Jumana Jouhar [https://github.com/jumanajouhar]
 ## Team Id
 spyder918
 ## Link to product walkthrough
