@@ -2,7 +2,7 @@
 # Project Name
 Long Description about project. This project do that. This project is awesome...
 ## Team members
-1. Name [Embed personal github URL]
+1. Muhamed Adil [https://github.com/xd1l]
 2. Jobin Tom [https://github.com/jobint001]
 3. Jumana Jouhar [https://github.com/jumanajouhar]
 ## Team Id
