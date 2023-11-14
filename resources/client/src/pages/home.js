@@ -26,6 +26,7 @@ class Home extends React.Component {
                             />
 
                             <button
+                                onClick={() => navigate("/dashboard")}
                                 type="submit"
                                 className="button regular-button pink-background cta-btn"
                             >

@@ -341,3 +341,119 @@ body.overflow-hidden {
   }
 }
 
+
+/* Additional CSS to style the task lists */
+.list-container {
+  margin-bottom: 16px;
+  padding: 16px;
+  background-color: #fff; /* Replace with your desired color */
+}
+
+.list-header {
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+}
+
+.task-item {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer; /* Indicates the item is clickable */
+  overflow: hidden; /* Keeps the description hidden until expanded */
+  transition: max-height 0.3s ease; /* Smooth transition for expanding */
+
+}
+
+.task-button {
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.task-due-date {
+  font-size: 14px;
+  color: #666;
+}
+
+.arrow-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Style the list containers based on task status */
+.list-container.todo {
+  border-left: 4px solid red;
+}
+
+.list-container.doing {
+  border-left: 4px solid blue;
+}
+
+.list-container.done {
+  border-left: 4px solid green;
+}
+
+
+.overlay.set-task-overlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay.set-task-overlay form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.overlay.set-task-overlay input,
+.overlay.set-task-overlay select {
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.overlay.set-task-overlay button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.overlay.set-task-overlay textarea {
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Allows the user to resize the textarea vertically */
+}
+
+.task-item.expanded {
+  max-height: 200px; /* Adjust as needed based on your description length */
+}
+
+.task-description {
+  margin-top: 8px;
+  /* any additional styling for the description */
+}
+
+

@@ -25,6 +25,7 @@ class Signup extends React.Component {
                             />
 
                             <button
+                                onClick={() => navigate(-1)}
                                 type="submit"
                                 className="button regular-button pink-background cta-btn"
                             >
