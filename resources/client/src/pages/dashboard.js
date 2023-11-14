@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './dashboard.css' 
+function HeaderWrapper({onAddTask}) {
+  const navigate = useNavigate();
 
+  return <Header navigate={navigate} />;
+}
 const Header = ({ onAddTask, navigate }) => (
+  
   <div className="max-width-container">
     <div className="header flex items-center justify-between">
       <h1 className="title">My tasks</h1>
@@ -13,11 +19,12 @@ const Header = ({ onAddTask, navigate }) => (
         >
           Add task
         </button>
-        <button className="sign-out-cta">Sign out</button>
+        <button className="sign-out-cta" onClick={() => navigate(-1)}>Sign out</button>
       </div>
     </div>
   </div>
 );
+
 
 
 
@@ -161,7 +168,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <Header onAddTask={handleAddTaskClick} />
+      <HeaderWrapper onAddTask={handleAddTaskClick}  />
       <RadioButtons onViewChange={handleViewChange} />
       {viewOption === 'list' && <TaskList tasks={tasks} />}
       <TaskOverlay isVisible={isTaskOverlayVisible} onClose={handleOverlayClose} />
