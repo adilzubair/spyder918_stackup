@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import './dashboard.css' 
+
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from '../firebase';
 
 const Header = ({ onAddTask, navigate }) => (
   <div className="max-width-container">
@@ -119,6 +122,23 @@ const Dashboard = () => {
   const [selectedTask, setSelectedTask] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
   const [tasks, setTasks] = useState([]); // Initialize tasks as an empty array
+
+  useEffect(()=>{
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          const uid = user.uid;
+          // ...
+          console.log("uid", uid)
+        } else {
+          // User is signed out
+          // ...
+          console.log("user is logged out")
+        }
+      });
+     
+}, [])
 
   const handleAddTaskClick = () => {
     setTaskOverlayVisible(true);
