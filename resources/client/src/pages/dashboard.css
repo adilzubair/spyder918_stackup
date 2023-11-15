@@ -456,4 +456,12 @@ body.overflow-hidden {
   /* any additional styling for the description */
 }
 
+/* Style for input type date */
+.overlay.set-task-overlay input[type="date"] {
+  padding: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit; /* To ensure the font matches the rest of your inputs */
+}
 
