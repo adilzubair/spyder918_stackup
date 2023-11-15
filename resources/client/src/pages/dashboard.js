@@ -73,23 +73,24 @@ const TaskList = ({ tasks }) => (
   
   
 
-  const TaskOverlay = ({ isVisible, onClose, onAddTask }) => (
-    isVisible && (
-      <div id="set-task-overlay" className="overlay set-task-overlay">
-        <form onSubmit={onAddTask}>
-          <input type="text" placeholder="Task Name" name="taskName" required />
-          <textarea placeholder="Task Description" name="taskDescription" required></textarea>
-          <select name="status" required>
-            <option value="Todo">To do</option>
-            <option value="Doing">Doing</option>
-            <option value="Done">Done</option>
-          </select>
-          <button type="submit">Add Task</button>
-        </form>
-        <button onClick={onClose}>Close</button>
-      </div>
-    )
-  );
+ const TaskOverlay = ({ isVisible, onClose, onAddTask }) => (
+  isVisible && (
+    <div id="set-task-overlay" className="overlay set-task-overlay">
+      <form onSubmit={onAddTask}>
+        <input type="text" placeholder="Task Name" name="taskName" required />
+        <input type="date" placeholder="Due Date" name="taskDueDate" required /> {/* This is the new due date input */}
+        <select name="status" required>
+          <option value="Todo">To do</option>
+          <option value="Doing">Doing</option>
+          <option value="Done">Done</option>
+        </select>
+        <button type="submit">Add Task</button>
+      </form>
+      <button onClick={onClose}>Close</button>
+    </div>
+  )
+);
+
   
   
 
@@ -145,19 +146,19 @@ const Dashboard = () => {
 
   const handleAddNewTask = (e) => {
     e.preventDefault();
-    const { taskName, taskDescription, status } = e.target.elements;
+    const { taskName, taskDueDate, status } = e.target.elements; // Get the due date from the form
     // Create a new task object
     const newTask = {
       name: taskName.value,
-      description: taskDescription.value,
+      dueDate: taskDueDate.value, // Store the due date
       status: status.value,
-      dueDate: new Date().toLocaleDateString() // or use a date picker
     };
     // Add the new task to the tasks array
     setTasks([...tasks, newTask]);
     // Close the overlay
     handleOverlayClose();
   };
+  
 
 
   return (
