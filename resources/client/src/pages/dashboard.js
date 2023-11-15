@@ -43,8 +43,7 @@ const RadioButtons = ({ onViewChange }) => (
     </div>
   </div>
 );
-
-const TaskList = ({ tasks }) => (
+const TaskList = ({ tasks, onDeleteTask, onEditTask }) => (
     <div className="max-width-container">
       <div id="list-view" className="list-view">
         {['Todo', 'Doing', 'Done'].map((status) => (
@@ -54,13 +53,14 @@ const TaskList = ({ tasks }) => (
             </div>
             {tasks
               .filter((task) => task.status === status)
-              .map((task, index) => (
-                <div key={index} className="task-item">
-                  <button className="task-button">
-                    <span className="task-name">{task.name}</span>
-                    <span className="task-due-date">{`Due on ${task.dueDate}`}</span>
-                    <span className="arrow-icon">{'>'}</span>
-                  </button>
+              .map((task) => (
+                <div key={task.id} className="task-item">
+                  <span className="task-name">{task.name}</span>
+                  <span className="task-due-date">{`Due on ${task.dueDate}`}</span>
+                  <div className="task-actions">
+                    
+                    <button onClick={() => onDeleteTask(task.id)}>Delete</button>
+                  </div>
                 </div>
               ))}
           </div>
@@ -68,28 +68,45 @@ const TaskList = ({ tasks }) => (
       </div>
     </div>
   );
+  
 
 
   
   
 
- const TaskOverlay = ({ isVisible, onClose, onAddTask }) => (
-  isVisible && (
-    <div id="set-task-overlay" className="overlay set-task-overlay">
-      <form onSubmit={onAddTask}>
-        <input type="text" placeholder="Task Name" name="taskName" required />
-        <input type="date" placeholder="Due Date" name="taskDueDate" required /> {/* This is the new due date input */}
-        <select name="status" required>
-          <option value="Todo">To do</option>
-          <option value="Doing">Doing</option>
-          <option value="Done">Done</option>
-        </select>
-        <button type="submit">Add Task</button>
-      </form>
-      <button onClick={onClose}>Close</button>
-    </div>
-  )
-);
+  const TaskOverlay = ({ isVisible, onClose, onSubmit, task }) => {
+    // Only show the overlay if it is supposed to be visible
+    if (!isVisible) return null;
+  
+    return (
+      <div id="set-task-overlay" className="overlay set-task-overlay">
+        <form onSubmit={(e) => onSubmit(e, task)}>
+          <input
+            type="text"
+            placeholder="Task Name"
+            name="taskName"
+            required
+            defaultValue={task ? task.name : ''}
+          />
+          <input
+            type="date"
+            name="taskDueDate"
+            required
+            defaultValue={task ? task.dueDate : ''}
+          />
+          <select name="status" required defaultValue={task ? task.status : 'Todo'}>
+            <option value="Todo">To do</option>
+            <option value="Doing">Doing</option>
+            <option value="Done">Done</option>
+          </select>
+          <button type="submit">{task ? 'Update Task' : 'Add Task'}</button>
+        </form>
+        <button onClick={onClose}>Close</button>
+      </div>
+    );
+  };
+  
+  
 
   
   
@@ -138,26 +155,50 @@ const Dashboard = () => {
     setSelectedTask(task);
   };
 
-  const handleDeleteTask = () => {
-    // Implement task deletion logic
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
+  const handleAddNewTask = (e, taskToEdit) => {
+    e.preventDefault();
+    const { taskName, taskDueDate, status } = e.target.elements;
+    
+    if (taskToEdit) {
+      // If editing an existing task, find the task by its id and update its properties
+      setTasks(tasks.map(task => {
+        if (task.id === taskToEdit.id) {
+          return { ...task, name: taskName.value, dueDate: taskDueDate.value, status: status.value };
+        }
+        return task;
+      }));
+    } else {
+      // If adding a new task (taskToEdit is undefined or null)
+      const newTask = { // Declare and define the newTask variable
+        id: Date.now(), // Ensure this is a unique id
+        name: taskName.value,
+        dueDate: taskDueDate.value,
+        status: status.value,
+      };
+      setTasks([...tasks, newTask]); // Add the new task to the existing tasks array
+    }
+    
+    handleOverlayClose(); // Close the overlay after adding or editing the task
+  };
+  
+  
+  
+
+  const handleDeleteTask = (taskId) => {
+    // Filter out the task to be deleted
+    const updatedTasks = tasks.filter(task => task.id !== taskId);
+    setTasks(updatedTasks);
   };
 
-  const handleAddNewTask = (e) => {
-    e.preventDefault();
-    const { taskName, taskDueDate, status } = e.target.elements; // Get the due date from the form
-    // Create a new task object
-    const newTask = {
-      name: taskName.value,
-      dueDate: taskDueDate.value, // Store the due date
-      status: status.value,
-    };
-    // Add the new task to the tasks array
-    setTasks([...tasks, newTask]);
-    // Close the overlay
-    handleOverlayClose();
+  const handleEditTask = (taskId) => {
+    const taskToEdit = tasks.find(task => task.id === taskId);
+    if (taskToEdit) {
+      setSelectedTask(taskToEdit); // Set the task to edit
+      setTaskOverlayVisible(true);  // Make the overlay visible
+    }
   };
+  
+  
   
 
 
@@ -165,8 +206,12 @@ const Dashboard = () => {
     <div className="dashboard">
       <Header onAddTask={handleAddTaskClick} />
       <RadioButtons onViewChange={handleViewChange} />
-      {viewOption === 'list' && <TaskList tasks={tasks} />}
-      <TaskOverlay isVisible={isTaskOverlayVisible} onClose={handleOverlayClose} />
+      <TaskOverlay
+        isVisible={isTaskOverlayVisible}
+        onClose={handleOverlayClose}
+        onSubmit={handleAddNewTask}
+        task={selectedTask} // Pass the task to be edited, or null if adding a new task
+      />
       {selectedTask && (
         <ViewTaskOverlay
           isVisible={Boolean(selectedTask)}
@@ -174,13 +219,14 @@ const Dashboard = () => {
         />
       )}
       <Notification message="Task was deleted" isVisible={showNotification} />
-      <TaskOverlay
-      isVisible={isTaskOverlayVisible}
-      onClose={handleOverlayClose}
-      onAddTask={handleAddNewTask}
-    />
-    
+      {/* Render TaskList only once with the required props */}
+      <TaskList
+        tasks={tasks}
+        onDeleteTask={handleDeleteTask} // Passing the delete handler as a prop
+        onEditTask={handleEditTask} // Passing the edit handler as a prop
+      />
     </div>
   );
+  
 };
 export default Dashboard;
