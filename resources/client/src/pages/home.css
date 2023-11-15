@@ -248,3 +248,10 @@ body {
     column-gap: var(--space-16);
   }
 }
+.error-message {
+  border: 1px solid red;
+  background-color: #ffe6e6;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
