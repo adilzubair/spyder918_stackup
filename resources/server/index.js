@@ -9,7 +9,7 @@ app.use(Express.json());
 app.use(Express.urlencoded({extended:true}));
 app.use(cors);
 
-const CONNECTION_URL='';
+const CONNECTION_URL='mongodb+srv://new_user_2:iUxTrZca7qAVeS4U@cluster0.uiriblh.mongodb.net/?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(CONNECTION_URL)
