@@ -1,56 +1,68 @@
-import React from 'react';
-import './home.css';
-import { useNavigate } from 'react-router-dom';
-
-class Home extends React.Component {
-    render() {
-        const { navigate } = this.props;
-
-        return (
-            <div className='height-full'>
-                <div className="row height-full">
-                    {/* left side */}
-                    <div className="left-column flex flex-column height-full justify-center items-center">
-                        <h1 className="welcoming-title">Welcome back</h1>
-                        <form className="form" autoComplete="off">
-                            <label htmlFor="email" className="label">Email</label>
-                            <input type="email" name="email" id="email" className="input" required />
-
-                            <label htmlFor="password" className="label">Password</label>
-                            <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                className="input"
-                                required
-                            />
-
-                            <button
-                                onClick={() => navigate("/dashboard")}
-                                type="submit"
-                                className="button regular-button pink-background cta-btn"
-                            >
-                                Log in
-                            </button>
-                        </form>
-                        <p className="sign-up-prompt">
-                            Don’t have an account?
-                            <a className="sign-up-link" onClick={() => navigate('/signup')}>Sign up</a>
-                        </p>
-                    </div>
-                    {/* right side */}
-                    <div className="right-column"></div>
-                </div>
-            </div>
-        );
-    }
-}
-
-// Functional component wrapper
-function HomeWrapper() {
+import React, {useState} from 'react';
+import {  signInWithEmailAndPassword   } from 'firebase/auth';
+import { auth } from '../firebase';
+import { NavLink, useNavigate } from 'react-router-dom'
+ 
+const HomeWrapper = () => {
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+       
+    const onLogin = (e) => {
+        e.preventDefault();
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            navigate("/dashboard")
+            console.log(user);
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage)
+        });
+       
+    }
+ 
+    return(
+        <div className='height-full'>
+        <div className="row height-full">
+            {/* left side */}
+            <div className="left-column flex flex-column height-full justify-center items-center">
+                <h1 className="welcoming-title">Welcome back</h1>
+                <form className="form" autoComplete="off">
+                    <label htmlFor="email" className="label">Email</label>
+                    <input type="email" name="email" id="email" className="input" onChange={(e)=>setEmail(e.target.value)} required />
 
-    return <Home navigate={navigate} />;
+                    <label htmlFor="password" className="label">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        className="input"
+                        required
+                        onChange={(e)=>setPassword(e.target.value)}
+                    />
+
+                    <button
+                        onClick={onLogin}
+                        type="submit"
+                        className="button regular-button pink-background cta-btn"
+                    >
+                        Log in
+                    </button>
+                </form>
+                <p className="sign-up-prompt">
+                    Don’t have an account?
+                    <a className="sign-up-link" onClick={() => navigate('/signup')}>Sign up</a>
+                </p>
+            </div>
+            {/* right side */}
+            <div className="right-column"></div>
+        </div>
+    </div>
+    )
 }
 
 export default HomeWrapper;

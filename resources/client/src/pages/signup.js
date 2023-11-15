@@ -5,7 +5,7 @@ import { auth } from '../firebase';
  
 const SignupWrapper = () => {
     const navigate = useNavigate();
- 
+    
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
  
