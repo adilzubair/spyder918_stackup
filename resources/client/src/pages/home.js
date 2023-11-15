@@ -5,6 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
  
 const HomeWrapper = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
        
@@ -19,8 +20,10 @@ const HomeWrapper = () => {
         })
         .catch((error) => {
             const errorCode = error.code;
-            const errorMessage = error.message;
+            var errorMessage = error.message;
+            
             console.log(errorCode, errorMessage)
+            setError(errorCode);
         });
        
     }
@@ -52,6 +55,11 @@ const HomeWrapper = () => {
                     >
                         Log in
                     </button>
+                    {error && 
+                                <div className="error-message">
+                                    <p>{error}</p>
+                                </div>
+                            }
                 </form>
                 <p className="sign-up-prompt">
                     Don’t have an account?

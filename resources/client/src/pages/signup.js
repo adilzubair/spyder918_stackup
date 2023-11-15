@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {  createUserWithEmailAndPassword  } from 'firebase/auth';
 import { auth } from '../firebase';
+import './home.css';
  
 const SignupWrapper = () => {
     const navigate = useNavigate();
-    
+    const [error, setError] = useState(null);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
  
@@ -22,8 +23,10 @@ const SignupWrapper = () => {
         })
         .catch((error) => {
             const errorCode = error.code;
-            const errorMessage = error.message;
+            var errorMessage = error.message;
+         
             console.log(errorCode, errorMessage);
+            setError(errorCode);
             // ..
         });
  
@@ -59,6 +62,11 @@ const SignupWrapper = () => {
                             >
                                 Sign up
                             </button>
+                            {error && 
+                                <div className="error-message">
+                                    <p>{error}</p>
+                                </div>
+                            }
                         </form>
                         <p className="login-prompt">
                             Already have an account?
