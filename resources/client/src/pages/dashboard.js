@@ -3,8 +3,26 @@ import './dashboard.css'
 
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase';
+import {  signOut } from "firebase/auth";
 
-const Header = ({ onAddTask, navigate }) => (
+import { useNavigate } from 'react-router-dom';
+
+
+function Header({ onAddTask, navigate })
+{ 
+  
+const handleLogout = () => {               
+      signOut(auth).then(() => {
+      // Sign-out successful.
+          navigate("/");
+          console.log("Signed out successfully")
+      }).catch((error) => {
+      // An error happened.
+          console.log(error);
+      });
+  }
+  
+  return(
   <div className="max-width-container">
     <div className="header flex items-center justify-between">
       <h1 className="title">My tasks</h1>
@@ -16,12 +34,12 @@ const Header = ({ onAddTask, navigate }) => (
         >
           Add task
         </button>
-        <button className="sign-out-cta">Sign out</button>
+        <button className="sign-out-cta" onClick={handleLogout} >Sign out</button>
       </div>
     </div>
   </div>
 );
-
+}
 
 
 
@@ -157,6 +175,7 @@ const Dashboard = () => {
       });
      
 }, [])
+ 
 
   const handleAddTaskClick = () => {
     setTaskOverlayVisible(true);
@@ -209,6 +228,8 @@ const Dashboard = () => {
     const updatedTasks = tasks.filter(task => task.id !== taskId);
     setTasks(updatedTasks);
   };
+  const navigate = useNavigate();
+
 
   const handleEditTask = (taskId) => {
     const taskToEdit = tasks.find(task => task.id === taskId);
@@ -224,7 +245,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <Header onAddTask={handleAddTaskClick} />
+      <Header onAddTask={handleAddTaskClick} navigate={navigate}/>
       <RadioButtons onViewChange={handleViewChange} />
       <TaskOverlay
         isVisible={isTaskOverlayVisible}
